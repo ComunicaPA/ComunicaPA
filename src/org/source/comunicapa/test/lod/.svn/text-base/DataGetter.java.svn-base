@@ -1,0 +1,183 @@
+package org.source.comunicapa.test.lod;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.source.comunicapa.model.Amministrazione;
+import org.source.comunicapa.model.Comune;
+import org.source.comunicapa.model.Servizio;
+import org.source.comunicapa.model.UfficioProtocollo;
+import org.source.comunicapa.model.UnitaOrganizzativa;
+
+//TODO: non devo istanziare le liste di pec, email, cec-pac se non le devo riempire, altrimenti mi stampa il menù senza contenuto
+public class DataGetter {
+	public List<Comune> searchForComune(String Comune) {
+		/*
+		 * Devo cercare il comune dentro i comuni, se lo trovo allora cerco
+		 * dentro amministrazione e setto le amministrazioni con tutti i dati e
+		 * i servizi e cerco tutti i dati, poi cerco dentro gli AOO, se ne trovo
+		 * li setto con tutti i dati e i rispettivi servizi inserendoli in un
+		 * oggetto Amministrazione (se già presente faccio la add, altrimenti
+		 * ne creo una nuova). Poi cerco gli OU, se ne trovo li setto con tutti
+		 * i dati e i rispettivi servizi inserendoli in un oggetto
+		 * Amministrazione (se già presente faccio la add, altrimenti ne creo
+		 * una nuova).
+		 */
+
+		List<Comune> comuni = new ArrayList<Comune>();
+		Amministrazione amm;
+		Servizio srv;
+
+		/* Cerco i comuni */
+		Comune c = new Comune("Avola");
+		c.setCap("04022");
+		comuni.add(c);
+
+		/* Cerco le amministrazioni direttamente presenti nel comune */
+		amm = new Amministrazione("c_a522", "Comune di Avola");
+		amm.setComune("Avola");
+		// amm.setCodice("c_a522");
+		// amm.setLabel("Comune di Avola");
+		amm.setHomepage("www.comune.avola.sr.it");
+		amm.setIndirizzo("Corso Garibaldi, 82");
+		amm.addPec("sindaco@pec.comune.avola.sr.it");
+		/* Cerco i servizi direttamente erogati dall'amministrazione */
+		/* N.B. Aggiunge già tutti quelli erogati dagli UP e OU */
+		srv = new Servizio();
+		amm.addServizio(srv);
+		srv.setPec("statocivile@pec.comune.avola.sr.it");
+		srv.setCommento("Stato Civile");
+		srv.setLabel("Servizi Demografici");
+		srv.setTelefono("0931583608");
+
+		srv = new Servizio();
+		amm.addServizio(srv);
+		srv.setPec("aire@pec.comune.avola.sr.it");
+		srv.setCommento("Anagrafe Italiano Residenti all'Estero");
+		srv.setLabel("AIRE");
+		srv.setTelefono("0931583612");
+		c.addAmministrazione(amm);
+
+		amm = new Amministrazione("istsc_sree01400d", "DIREZIONE DIDATTICA - II C.D. \"A. CAIA\" AVOLA");
+		c.addAmministrazione(amm);
+		amm.setComune("Avola");
+		// amm.setCodice("istsc_sree01400d");
+		// amm.setLabel("DIREZIONE DIDATTICA - II C.D. \"A. CAIA\" AVOLA"); //
+		// TBD: verificare che succede con la presenza di "
+		amm.setHomepage("www.secondocircoloavola.org"); // TBD: determinare se
+														// devono essere con
+														// http:// o senza
+
+		amm.setIndirizzo("VIA LUIGI RAZZA, 4");
+		amm.addPec("sree01400d@pec.istruzione.it");
+		amm.addPec("postmaster@pec.secondocircoloavola.org");
+
+		/* Cerco le aree organizzative omogenee direttamente presenti nel comune */
+		UfficioProtocollo up = new UfficioProtocollo("TSR29431", "STAZIONE CC - AVOLA"); // TSR29431,
+																							// cod_amm,
+																							// =cc
+		up.setComune("AVOLA");
+		up.setIndirizzo("VIA SALVO D'ACQUISTO  1");
+		// up.setLabel("STAZIONE CC - AVOLA");
+		up.setTelefono("0931821212");
+		up.addPec("tsr29431@pec.carabinieri.it");
+		up.setCodiceAmministrazione("cc");
+		up.setLabelAmministrazione("Arma dei Carabinieri");
+
+		/*
+		 * Controllo se questo up non faccia già parte di un'amministrazione
+		 * già inserita
+		 */
+		if (c.contains(up.getCodiceAmministrazione())) {
+			amm = c.getAmministrazione(up.getCodiceAmministrazione());
+			amm.addUfficioProtocollo(up);
+		} else {
+			amm = new Amministrazione(up.getCodiceAmministrazione(), up.getLabelAmministrazione());
+			amm.setCodice(up.getCodiceAmministrazione());
+			amm.setLabel(up.getLabelAmministrazione());
+			/*
+			 * Cerco i servizi direttamente erogati dall'area organizzativa
+			 * omogenea
+			 */
+			/*
+			 * TBD Devo cercare i servizi direttamente erogati dall'aoo e che
+			 * non sono devono essere presenti nell'amministrazione di
+			 * riferimento
+			 */
+			amm.addUfficioProtocollo(up);
+			c.addAmministrazione(amm);
+		}
+
+		/* Cerco le unità organizzative direttamente presenti nel comune */
+		UnitaOrganizzativa uo = new UnitaOrganizzativa("27383", "Segreteria Generale"); // 27383
+		uo.addEmail("segretario.generale@comune.avola.sr.it");
+		// uo.setLabel("Segreteria Generale");
+		uo.setComune("Avola");
+		uo.setCodiceAmministrazione("c_a522");
+		uo.setLabelAmministrazione("Comune di Avola");
+
+		/*
+		 * Controllo se questo ou non faccia già parte di un'amministrazione
+		 * già inserita
+		 */
+		if (c.contains(uo.getCodiceAmministrazione())) {
+			amm = c.getAmministrazione(up.getCodiceAmministrazione());
+			amm.addUnitaOrganizzativa(uo);
+		} else {
+			amm = new Amministrazione("c_a522", "Comune di Avola");
+			amm.setCodice(up.getCodiceAmministrazione());
+			amm.setLabel(up.getLabelAmministrazione());
+			/*
+			 * TBD Devo cercare i servizi direttamente erogati dall'ou e che non
+			 * sono devono essere presenti nell'amministrazione di riferimento
+			 */
+			amm.addUnitaOrganizzativa(uo);
+			c.addAmministrazione(amm);
+		}
+
+		uo = new UnitaOrganizzativa("27384", "Tutela Ambientale"); // 27384
+		uo.addEmail("ecologia@comune.avola.sr.it");
+		// uo.setLabel("Tutela Ambientale");
+		uo.setComune("Avola");
+		uo.setIndirizzo("S.P. Avola-Calabernardo km 0.5");
+		uo.setTelefono("0931561945");
+
+		if (c.contains(uo.getCodiceAmministrazione())) {
+			amm = c.getAmministrazione(uo.getCodiceAmministrazione());
+			amm.addUnitaOrganizzativa(uo);
+			// System.out.println("Già presente nell'amministrazione "+amm.getLabel());
+		} else {
+			// System.out.println("Non presente");
+			amm = new Amministrazione("c_a522", "Comune di Avola");
+			amm.setCodice(uo.getCodiceAmministrazione());
+			amm.setLabel(uo.getLabelAmministrazione());
+			amm.addUnitaOrganizzativa(uo);
+			c.addAmministrazione(amm);
+		}
+
+		c = new Comune("Avolasca");
+		comuni.add(c);
+
+		amm = new Amministrazione("c_a523", "Comune di Avolasca");
+		c.addAmministrazione(amm);
+		amm.setComune("Avolasca");
+		// amm.setCodice("c_a523");
+		// amm.setLabel("Comune di Avolasca");
+		amm.setHomepage("www.comune.avolasca.al.it");
+		amm.setIndirizzo("Via Del Municipio 4");
+		amm.addPec("protocollo@pec.comune.avolasca.al.it");
+
+		return comuni;
+	}
+
+	/*
+	 * Devo cercare l'amministrazione, se la trovo allora setto tutti i suoi
+	 * dati e i rispettivi servizi. Se a quest'amministrazione è associata sono
+	 * associate delle AOO allora le setto tutte con i rispettivi dati e
+	 * servizi. Se a quest'amministrazione è associata sono associate degli UO
+	 * allora li setto tutti con i rispettivi dati e servizi.
+	 */
+	protected List<Amministrazione> searchForAmministrazione(String amministrazione) {
+		return null;
+	}
+}

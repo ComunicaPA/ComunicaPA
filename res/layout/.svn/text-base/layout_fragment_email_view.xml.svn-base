@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_tile"
+    android:orientation="vertical"
+    android:padding="20dip" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            style="@style/radiobox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/email_sent_reciever_label" />
+
+        <TextView
+            android:id="@+id/email_address_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/email_bg"
+            android:padding="5dip"
+            android:text="comunicapa@pa.it"
+            android:textColor="@android:color/white"
+            android:textSize="15dip" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
+        android:orientation="vertical" >
+
+        <TextView
+            style="@style/radiobox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/email_subject" />
+
+        <TextView
+            android:id="@+id/email_subject_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/subject_shape"
+            android:text="qui va l\&apos;oggetto della mail"
+            android:textColor="@android:color/black"
+            android:textSize="12dip" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:layout_marginTop="15dip">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/email_body_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/subject_shape"
+                android:text="qui va il corpo della mail"
+                android:textColor="@android:color/black"
+                android:textSize="12dip" />
+        </LinearLayout>
+    </ScrollView>
+	<LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="bottom"
+	    android:layout_marginTop="20dip"
+	    android:gravity="center">
+        <Button
+            android:id="@+id/email_forward_button" 
+            android:layout_width="100dip"
+	    	android:layout_height="wrap_content"
+	    	android:text="@string/email_button_forward"
+	    	android:textSize="12dip"
+	    	android:background="@drawable/btn_blue"/>
+        <Button
+            android:id="@+id/email_delete_button" 
+            android:layout_width="100dip"
+	    	android:layout_height="wrap_content"
+	    	android:text="@string/email_button_cancel"
+	    	android:textSize="12dip"
+	    	android:background="@drawable/btn_blue"
+	    	android:layout_marginLeft="25dip"/>
+	    
+	</LinearLayout>
+</LinearLayout>

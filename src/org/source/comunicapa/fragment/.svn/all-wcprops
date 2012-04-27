@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/comunicapa/!svn/ver/50/trunk/ComunicaPA/src/org/source/comunicapa/fragment
+END
+CartelleFragment.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/comunicapa/!svn/ver/2/trunk/ComunicaPA/src/org/source/comunicapa/fragment/CartelleFragment.java
+END
+InfoFragment.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/comunicapa/!svn/ver/37/trunk/ComunicaPA/src/org/source/comunicapa/fragment/InfoFragment.java
+END
+FolderEmailFragment.java
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/comunicapa/!svn/ver/16/trunk/ComunicaPA/src/org/source/comunicapa/fragment/FolderEmailFragment.java
+END
+ListEmailFragment.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/comunicapa/!svn/ver/16/trunk/ComunicaPA/src/org/source/comunicapa/fragment/ListEmailFragment.java
+END
+SettingEmailFragment.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/comunicapa/!svn/ver/50/trunk/ComunicaPA/src/org/source/comunicapa/fragment/SettingEmailFragment.java
+END
+ComuneFragment.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/comunicapa/!svn/ver/37/trunk/ComunicaPA/src/org/source/comunicapa/fragment/ComuneFragment.java
+END
+SettingMainFragment.java
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/comunicapa/!svn/ver/50/trunk/ComunicaPA/src/org/source/comunicapa/fragment/SettingMainFragment.java
+END
+SearchFragment.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/comunicapa/!svn/ver/21/trunk/ComunicaPA/src/org/source/comunicapa/fragment/SearchFragment.java
+END
+ViewEmailFragment.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/comunicapa/!svn/ver/16/trunk/ComunicaPA/src/org/source/comunicapa/fragment/ViewEmailFragment.java
+END
+DashboardFragment.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/comunicapa/!svn/ver/16/trunk/ComunicaPA/src/org/source/comunicapa/fragment/DashboardFragment.java
+END
+RubricaFragment.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/comunicapa/!svn/ver/2/trunk/ComunicaPA/src/org/source/comunicapa/fragment/RubricaFragment.java
+END
+AmministrazioneFragment.java
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/comunicapa/!svn/ver/37/trunk/ComunicaPA/src/org/source/comunicapa/fragment/AmministrazioneFragment.java
+END
+ListaComuniFragment.java
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/comunicapa/!svn/ver/28/trunk/ComunicaPA/src/org/source/comunicapa/fragment/ListaComuniFragment.java
+END

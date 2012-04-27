@@ -1,0 +1,137 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/comunicapa/!svn/ver/42/trunk/ComunicaPA/res/layout
+END
+main.xml
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/comunicapa/!svn/ver/42/trunk/ComunicaPA/res/layout/main.xml
+END
+layout_fragment_dashboard.xml
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/comunicapa/!svn/ver/16/trunk/ComunicaPA/res/layout/layout_fragment_dashboard.xml
+END
+layout_emailgroup_item.xml
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/comunicapa/!svn/ver/38/trunk/ComunicaPA/res/layout/layout_emailgroup_item.xml
+END
+layout_fragment_email_list.xml
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/comunicapa/!svn/ver/16/trunk/ComunicaPA/res/layout/layout_fragment_email_list.xml
+END
+layout_setting.xml
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/comunicapa/!svn/ver/42/trunk/ComunicaPA/res/layout/layout_setting.xml
+END
+layout_search.xml
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/comunicapa/!svn/ver/42/trunk/ComunicaPA/res/layout/layout_search.xml
+END
+layout_emailchild_item.xml
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/comunicapa/!svn/ver/38/trunk/ComunicaPA/res/layout/layout_emailchild_item.xml
+END
+titleview.xml
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/comunicapa/!svn/ver/41/trunk/ComunicaPA/res/layout/titleview.xml
+END
+layout_comune_fragment_info.xml
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/comunicapa/!svn/ver/38/trunk/ComunicaPA/res/layout/layout_comune_fragment_info.xml
+END
+layout_amministrazione_fragment.xml
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/comunicapa/!svn/ver/42/trunk/ComunicaPA/res/layout/layout_amministrazione_fragment.xml
+END
+layout_fragment_search.xml
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/comunicapa/!svn/ver/42/trunk/ComunicaPA/res/layout/layout_fragment_search.xml
+END
+layout_fragment_email_view.xml
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/comunicapa/!svn/ver/16/trunk/ComunicaPA/res/layout/layout_fragment_email_view.xml
+END
+layout_amministrazione_item.xml
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/comunicapa/!svn/ver/38/trunk/ComunicaPA/res/layout/layout_amministrazione_item.xml
+END
+layout_email.xml
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/comunicapa/!svn/ver/16/trunk/ComunicaPA/res/layout/layout_email.xml
+END
+layout_actionbar_custom.xml
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/comunicapa/!svn/ver/4/trunk/ComunicaPA/res/layout/layout_actionbar_custom.xml
+END
+layout_fragment_info.xml
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/comunicapa/!svn/ver/18/trunk/ComunicaPA/res/layout/layout_fragment_info.xml
+END
+layout_fragment_comuni.xml
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/comunicapa/!svn/ver/38/trunk/ComunicaPA/res/layout/layout_fragment_comuni.xml
+END
+layout_email_item.xml
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/comunicapa/!svn/ver/16/trunk/ComunicaPA/res/layout/layout_email_item.xml
+END
+layout_fragment_email_folder.xml
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/comunicapa/!svn/ver/16/trunk/ComunicaPA/res/layout/layout_fragment_email_folder.xml
+END
+layout_comune_item.xml
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/comunicapa/!svn/ver/38/trunk/ComunicaPA/res/layout/layout_comune_item.xml
+END
+layout_dashboard_entry.xml
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/comunicapa/!svn/ver/6/trunk/ComunicaPA/res/layout/layout_dashboard_entry.xml
+END
+layout_setting_base.xml
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/comunicapa/!svn/ver/42/trunk/ComunicaPA/res/layout/layout_setting_base.xml
+END

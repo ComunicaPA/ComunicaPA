@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@drawable/bg_tile">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="0.2"
+            >
+
+            <TextView
+                android:id="@+id/text_amministrazione"
+                style="@style/text_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="label" />
+
+            <TextView
+                android:id="@+id/text_amministrazione_indirizzo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:textSize="11dip"
+                android:text="indirizzo" />
+           
+            <TextView
+                android:id="@+id/text_amministrazione_homepage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:textSize="11dip" 
+                android:autoLink="web"
+                android:text="homepage"
+               
+                />
+          <TextView
+                android:id="@+id/text_amministrazione_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="11dip" 
+                android:autoLink="phone"
+                android:text="phone"
+                android:layout_marginLeft="5dip"
+            
+                />
+        </LinearLayout>
+        <ImageView 
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8"
+            android:src="@drawable/add_contact"
+            android:padding="5dip"
+            android:id="@+id/button_add_administration_contact"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dip"
+        android:layout_marginTop="3dip"
+        android:background="@android:color/darker_gray" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dip" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+           
+
+            <ExpandableListView
+                android:id="@+id/expand_listview_amministrazione_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip" >
+            </ExpandableListView>
+
+            <ExpandableListView
+                android:id="@+id/expand_listview_amministrazione_pec"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dip" >
+            </ExpandableListView>
+
+            <ExpandableListView
+                android:id="@+id/expand_listview_amministrazione_cecpac"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dip" >
+            </ExpandableListView>
+
+            <TextView
+                android:id="@+id/text_amministrazione_show_servizi"
+                style="@style/radiobox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:text="@string/show_servizi" />
+
+            <TextView
+                android:id="@+id/text_amministrazione_show_uffici"
+                style="@style/radiobox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dip"
+                android:text="@string/show_ufficio" />
+
+            <TextView
+                android:id="@+id/text_amministrazione_show_unita"
+                style="@style/radiobox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dip"
+                android:text="@string/show_unita" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

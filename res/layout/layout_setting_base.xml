@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_tile"
+    android:orientation="vertical"
+    android:padding="10dip" >
+
+    <TextView
+        style="@style/radiobox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/settings_app"
+        android:textSize="20dip" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        
+        android:layout_height="2dip"
+        android:layout_marginTop="3dip"
+        android:background="@android:color/darker_gray"
+        android:layout_marginBottom="15dip" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_pec"
+            style="@style/radiobox"
+            android:paddingTop="10dip"
+            android:paddingBottom="10dip"
+            android:clickable="true"
+            android:drawableRight="@drawable/setting"
+            android:gravity="center_vertical" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dip"
+            android:layout_marginTop="3dip"
+            android:background="@android:color/darker_gray" >
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/setting_account_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_email"
+            style="@style/radiobox"
+            android:paddingTop="10dip"
+            android:paddingBottom="10dip"
+            android:clickable="true"
+            android:drawableRight="@drawable/setting"
+            android:gravity="center_vertical" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dip"
+            android:layout_marginTop="3dip"
+            android:background="@android:color/darker_gray" >
+        </LinearLayout>
+        
+        <TextView
+            android:id="@+id/setting_account_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_email_sender"
+            style="@style/radiobox"
+            android:paddingTop="10dip"
+            android:paddingBottom="10dip" />
+
+        <RadioGroup
+            android:id="@+id/radiogroup_choose_type_email_sender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center" >
+
+            <RadioButton
+                android:id="@+id/app_email_sender"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:checked="true"
+                android:text="@string/app_name"
+           
+                style="@style/radiobox"
+                android:textSize="12dip"
+                android:layout_marginRight="5dip" />
+
+            <RadioButton
+                android:id="@+id/ext_email_sender"
+                style="@style/radiobox"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/setting_email_sender_app"
+                android:textSize="12dip" />
+           
+        </RadioGroup>
+
+</LinearLayout>

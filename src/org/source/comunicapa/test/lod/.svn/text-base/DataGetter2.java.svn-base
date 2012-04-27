@@ -1,0 +1,582 @@
+package org.source.comunicapa.test.lod;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.source.comunicapa.model.Amministrazione;
+import org.source.comunicapa.model.Comune;
+import org.source.comunicapa.model.Impostazioni;
+import org.source.comunicapa.model.Servizio;
+import org.source.comunicapa.model.UfficioProtocollo;
+import org.source.comunicapa.model.UnitaOrganizzativa;
+
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.QuerySolution;
+import com.hp.hpl.jena.query.ResultSet;
+
+public class DataGetter2 {
+	public List<Comune> searchForComune(String comune_input) {
+		/*
+		 * Devo cercare il comune dentro i comuni, se lo trovo allora cerco
+		 * dentro amministrazione e setto le amministrazioni con tutti i dati e
+		 * i servizi e cerco tutti i dati, poi cerco dentro gli AOO, se ne trovo
+		 * li setto con tutti i dati e i rispettivi servizi inserendoli in un
+		 * oggetto Amministrazione (se già presente faccio la add, altrimenti
+		 * ne creo una nuova). Poi cerco gli OU, se ne trovo li setto con tutti
+		 * i dati e i rispettivi servizi inserendoli in un oggetto
+		 * Amministrazione (se già presente faccio la add, altrimenti ne creo
+		 * una nuova).
+		 */
+
+		List<Comune> comuni = new ArrayList<Comune>();
+
+		String queryString = "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> " + "prefix digitPA: <http://spcdata.digitpa.gov.it/> "
+				+ "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> " + "select ?cod_com ?comune " + "where{ "
+				+ "	?cod_com rdf:type digitPA:Comune . " + "	?cod_com rdfs:label ?comune . " + "	FILTER (regex(str(?comune), \"^" + comune_input
+				+ "\", \"i\")) . " + "}";
+		try {
+			Amministrazione amm;
+			Query query = QueryFactory.create(queryString);
+			QueryExecution qexec = QueryExecutionFactory.sparqlService(Impostazioni.endpoint, query);
+			ResultSet resultsComuni = qexec.execSelect();
+			String comune = null, cod_com = null;
+
+			for (; resultsComuni.hasNext();) {
+				QuerySolution solutionComune = resultsComuni.nextSolution();
+
+				if (solutionComune.getResource("cod_com") != null && solutionComune.getLiteral("comune") != null) {
+					cod_com = solutionComune.getResource("cod_com").toString();
+					comune = solutionComune.getLiteral("comune").toString();
+
+					Comune c = new Comune(comune);
+
+					for (Amministrazione a : searchAmministrazioniForComune(cod_com, comune)) {
+						c.addAmministrazione(a);
+					}
+
+					for (UfficioProtocollo up : searchUfficiProtocolloForComune(cod_com, comune)) {
+						if (c.contains(up.getCodiceAmministrazione())) {
+							amm = c.getAmministrazione(up.getCodiceAmministrazione());
+							amm.addUfficioProtocollo(up);
+						} else {
+							amm = new Amministrazione(up.getCodiceAmministrazione(), up.getLabelAmministrazione());
+							amm.addUfficioProtocollo(up);
+							c.addAmministrazione(amm);
+						}
+					}
+
+					for (UnitaOrganizzativa uo : searchUnitaOrganizzativeForComune(cod_com, comune)) {
+						if (c.contains(uo.getCodiceAmministrazione())) {
+							amm = c.getAmministrazione(uo.getCodiceAmministrazione());
+							amm.addUnitaOrganizzativa(uo);
+							c.addAmministrazione(amm);
+						} else {
+							amm = new Amministrazione(uo.getCodiceAmministrazione(), uo.getLabelAmministrazione());
+							amm.addUnitaOrganizzativa(uo);
+						}
+					}
+					comuni.add(c);
+				}
+			}
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+
+		return comuni;
+	}
+
+	public List<Amministrazione> searchForAmministrazione(String amministrazione_input) {
+		// Cerco le Amministrazioni del Comune
+		String sito_web = null, indirizzo = null, pec = null, email = null, cecpac = null;
+		List<Amministrazione> amministrazioni = new ArrayList<Amministrazione>();
+
+		String queryString = "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> " + "prefix digitPA: <http://spcdata.digitpa.gov.it/> "
+				+ "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> " + "prefix geonames: <http://www.geonames.org/ontology#> "
+				+ "prefix foaf: <http://xmlns.com/foaf/0.1/> " + "select ?cod_amm ?amministrazione ?comune ?sito_web ?indirizzo ?pec ?email ?cecpac "
+				+ "where{ " + "	?cod_amm rdf:type digitPA:Amministrazione . " + "	?cod_com rdf:type digitPA:Comune . "
+				+ "	?cod_amm geonames:locatedIn ?cod_com . " + "	?cod_amm rdfs:label ?amministrazione . " + "	?cod_com rdfs:label ?comune . "
+				+ "	FILTER (regex(str(?amministrazione), \"" + amministrazione_input + "\", \"i\")) . " + "	OPTIONAL { ?cod_amm foaf:homepage ?sito_web } . "
+				+ "	OPTIONAL { ?cod_amm digitPA:indirizzo ?indirizzo } . " + "	OPTIONAL { ?cod_amm digitPA:PEC ?pec } .  "
+				+ "	OPTIONAL { ?cod_amm foaf:mbox ?email } . " + "	OPTIONAL { ?cod_amm digitPA:CEC-PAC ?cecpac } . " + "} " + "order by ?cod_amm";
+		try {
+			Query query = QueryFactory.create(queryString);
+			QueryExecution qexec = QueryExecutionFactory.sparqlService(Impostazioni.endpoint, query);
+			ResultSet resultsAmministrazioni = qexec.execSelect();
+			String cod_amm, amministrazione, comune, last_cod_amm = null;
+			Amministrazione amm = null;
+			for (; resultsAmministrazioni.hasNext();) {
+				QuerySolution solutionAmministrazione = resultsAmministrazioni.nextSolution();
+				if (solutionAmministrazione.getResource("cod_amm") != null && solutionAmministrazione.getLiteral("amministrazione") != null) {
+
+					cod_amm = solutionAmministrazione.getResource("cod_amm").toString();
+					amministrazione = solutionAmministrazione.getLiteral("amministrazione").toString();
+					comune = solutionAmministrazione.getLiteral("comune").toString();
+
+					// Nel caso di pec/email molteplici queste informazioni
+					// risultano duplicate nel ResultSet e quindi non bisogna
+					// ricreare un'amministrazione
+					if (cod_amm != last_cod_amm) {
+						amm = new Amministrazione(cod_amm, amministrazione);
+						amm.setComune(comune);
+						amministrazioni.add(amm);
+
+						if (solutionAmministrazione.getLiteral("indirizzo") != null) {
+							indirizzo = solutionAmministrazione.getLiteral("indirizzo").toString();
+							amm.setIndirizzo(indirizzo);
+						}
+
+						if (solutionAmministrazione.getLiteral("sito_web") != null) {
+							sito_web = solutionAmministrazione.getLiteral("sito_web").toString();
+							amm.setHomepage(sito_web);
+						}
+
+						for (UfficioProtocollo up : searchUfficiProtocolloForAmministrazione(cod_amm, amministrazione)) {
+							amm.addUfficioProtocollo(up);
+						}
+
+						for (UnitaOrganizzativa uo : searchUnitaOrganizzativeForAmministrazione(cod_amm, amministrazione)) {
+							amm.addUnitaOrganizzativa(uo);
+						}
+
+						for (Servizio s : searchServiziForAmministrazione(cod_amm)) {
+							amm.addServizio(s);
+						}
+					}
+
+					// Queste informazioni possono risultare duplicate nel
+					// ResultSet ma il controllo lo faccio dentro il model
+					if (solutionAmministrazione.getLiteral("pec") != null) {
+						pec = solutionAmministrazione.getLiteral("pec").toString();
+						amm.addPec(pec);
+					}
+
+					if (solutionAmministrazione.getLiteral("email") != null) {
+						email = solutionAmministrazione.getLiteral("email").toString();
+						amm.addEmail(email);
+					}
+
+					if (solutionAmministrazione.getLiteral("cecpac") != null) {
+						pec = solutionAmministrazione.getLiteral("cecpac").toString();
+						amm.addCecpac(cecpac);
+					}
+					last_cod_amm = cod_amm;
+				}
+			}
+		} catch (Exception e) {
+
+		}
+		return amministrazioni;
+	}
+
+	private List<Amministrazione> searchAmministrazioniForComune(String cod_com, String comune) {
+		// Cerco le Amministrazioni del Comune
+		String sito_web = null, indirizzo = null, pec = null, email = null, cecpac = null;
+		List<Amministrazione> amministrazioni = new ArrayList<Amministrazione>();
+
+		String queryString = "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> " + "prefix digitPA: <http://spcdata.digitpa.gov.it/> "
+				+ "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> " + "prefix geonames: <http://www.geonames.org/ontology#> "
+				+ "prefix foaf: <http://xmlns.com/foaf/0.1/> " + "select ?cod_amm ?amministrazione ?sito_web ?indirizzo ?pec ?email ?cecpac " + "where{ "
+				+ "	?cod_amm rdf:type digitPA:Amministrazione . " + "	?cod_amm geonames:locatedIn <" + cod_com + "> . "
+				+ "	?cod_amm rdfs:label ?amministrazione . " + "	OPTIONAL { ?cod_amm foaf:homepage ?sito_web } . "
+				+ "	OPTIONAL { ?cod_amm digitPA:PEC ?pec } . " + "	OPTIONAL { ?cod_amm digitPA:indirizzo ?indirizzo } . "
+				+ "	OPTIONAL { ?cod_amm foaf:mbox ?email } . " + "	OPTIONAL { ?cod_amm digitPA:CEC-PAC ?cecpac } . " + "} " + "order by ?cod_amm";
+		try {
+			Query query = QueryFactory.create(queryString);
+			QueryExecution qexec = QueryExecutionFactory.sparqlService(Impostazioni.endpoint, query);
+			ResultSet resultsAmministrazioni = qexec.execSelect();
+			String cod_amm, amministrazione, last_cod_amm = null;
+			Amministrazione amm = null;
+			for (; resultsAmministrazioni.hasNext();) {
+				QuerySolution solutionAmministrazione = resultsAmministrazioni.nextSolution();
+				if (solutionAmministrazione.getResource("cod_amm") != null && solutionAmministrazione.getLiteral("amministrazione") != null) {
+
+					cod_amm = solutionAmministrazione.getResource("cod_amm").toString();
+					amministrazione = solutionAmministrazione.getLiteral("amministrazione").toString();
+
+					// Nel caso di pec/email molteplici queste informazioni
+					// risultano duplicate nel ResultSet e quindi non bisogna
+					// ricreare un'amministrazione
+					if (cod_amm != last_cod_amm) {
+						amm = new Amministrazione(cod_amm, amministrazione);
+						amm.setComune(comune);
+						amministrazioni.add(amm);
+
+						if (solutionAmministrazione.getLiteral("indirizzo") != null) {
+							indirizzo = solutionAmministrazione.getLiteral("indirizzo").toString();
+							amm.setIndirizzo(indirizzo);
+						}
+
+						if (solutionAmministrazione.getLiteral("sito_web") != null) {
+							sito_web = solutionAmministrazione.getLiteral("sito_web").toString();
+							amm.setHomepage(sito_web);
+						}
+
+						for (Servizio s : searchServiziForAmministrazione(cod_amm)) {
+							amm.addServizio(s);
+						}
+					}
+
+					// Queste informazioni possono risultare duplicate nel
+					// ResultSet ma il controllo lo faccio dentro il model
+					if (solutionAmministrazione.getLiteral("pec") != null) {
+						pec = solutionAmministrazione.getLiteral("pec").toString();
+						amm.addPec(pec);
+					}
+
+					if (solutionAmministrazione.getLiteral("email") != null) {
+						email = solutionAmministrazione.getLiteral("email").toString();
+						amm.addEmail(email);
+					}
+
+					if (solutionAmministrazione.getLiteral("cecpac") != null) {
+						pec = solutionAmministrazione.getLiteral("cecpac").toString();
+						amm.addCecpac(cecpac);
+					}
+					last_cod_amm = cod_amm;
+
+				}
+
+			}
+		} catch (Exception e) {
+
+		}
+		return amministrazioni;
+	}
+
+	private List<UfficioProtocollo> searchUfficiProtocolloForComune(String cod_com, String comune) {
+		List<UfficioProtocollo> uffici_protocollo = new ArrayList<UfficioProtocollo>();
+		Query query = null;
+		QueryExecution qexec = null;
+
+		String cod_amm = null, amministrazione = null, sito_web = null, indirizzo = null, pec = null, email = null, cecpac = null, telefono = null;
+		// Cerco gli UfficiProtocollo del Comune
+		String queryString = "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> " + "prefix digitPA: <http://spcdata.digitpa.gov.it/> "
+				+ "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> " + "prefix geonames: <http://www.geonames.org/ontology#> "
+				+ "prefix foaf: <http://xmlns.com/foaf/0.1/> "
+				+ "select ?cod_up ?ufficio_protocollo ?cod_amm ?amministrazione ?sito_web ?telefono ?indirizzo ?pec ?email ?cecpac  " + "where{ "
+				+ "	?cod_up rdf:type digitPA:UfficioProtocolloAOO . " + "	?cod_up geonames:locatedIn <" + cod_com + "> . "
+				+ "	?cod_up rdfs:label ?ufficio_protocollo . " + "	?cod_up	 digitPA:afferisce ?cod_amm . " + "	?cod_amm rdfs:label ?amministrazione . "
+				+ "	OPTIONAL { ?cod_up foaf:homepage ?sito_web } . " + "	OPTIONAL { ?cod_up digitPA:indirizzo ?indirizzo } . "
+				+ "	OPTIONAL { ?cod_up digitPA:PEC ?pec } .  " + "	OPTIONAL { ?cod_up foaf:mbox ?email } . "
+				+ "	OPTIONAL { ?cod_up digitPA:CEC-PAC ?cecpac } . " + "	OPTIONAL { ?cod_up foaf:phone ?telefono  } . " + "}" + "ORDER BY ?cod_up";
+
+		query = QueryFactory.create(queryString);
+		qexec = QueryExecutionFactory.sparqlService(Impostazioni.endpoint, query);
+		ResultSet resultsUfficiProtocollo = qexec.execSelect();
+		String cod_up, ufficio_protocollo, last_cod_up = null;
+		UfficioProtocollo up = null;
+		for (; resultsUfficiProtocollo.hasNext();) {
+			QuerySolution solutionUfficioProtocollo = resultsUfficiProtocollo.nextSolution();
+			if (solutionUfficioProtocollo.getResource("cod_up") != null && solutionUfficioProtocollo.getLiteral("ufficio_protocollo") != null) {
+
+				cod_amm = solutionUfficioProtocollo.getResource("cod_amm").toString();
+				amministrazione = solutionUfficioProtocollo.getLiteral("amministrazione").toString();
+				ufficio_protocollo = solutionUfficioProtocollo.getLiteral("ufficio_protocollo").toString();
+				cod_up = solutionUfficioProtocollo.getResource("cod_up").toString();
+
+				if (cod_up != last_cod_up) {
+					up = new UfficioProtocollo(cod_up, ufficio_protocollo);
+
+					up.setComune(comune);
+					up.setCodiceAmministrazione(cod_amm);
+					up.setLabelAmministrazione(amministrazione);
+
+					uffici_protocollo.add(up);
+
+					if (solutionUfficioProtocollo.getLiteral("indirizzo") != null) {
+						indirizzo = solutionUfficioProtocollo.getLiteral("indirizzo").toString();
+						up.setIndirizzo(indirizzo);
+					}
+
+					if (solutionUfficioProtocollo.getLiteral("sito_web") != null) {
+						sito_web = solutionUfficioProtocollo.getLiteral("sito_web").toString();
+						up.setHomepage(sito_web);
+					}
+
+					if (solutionUfficioProtocollo.getLiteral("telefono") != null) {
+						telefono = solutionUfficioProtocollo.getLiteral("telefono").toString();
+						up.setTelefono(telefono);
+					}
+
+					for (Servizio s : searchServiziForUfficioProtocollo(cod_up)) {
+						up.addServizio(s);
+					}
+				}
+
+				// Queste informazioni possono risultare duplicate nel ResultSet
+				// ma il controllo lo faccio dentro il model
+				if (solutionUfficioProtocollo.getLiteral("pec") != null) {
+					pec = solutionUfficioProtocollo.getLiteral("pec").toString();
+					up.addPec(pec);
+				}
+
+				if (solutionUfficioProtocollo.getLiteral("email") != null) {
+					email = solutionUfficioProtocollo.getLiteral("email").toString();
+					up.addEmail(email);
+				}
+
+				if (solutionUfficioProtocollo.getLiteral("cecpac") != null) {
+					pec = solutionUfficioProtocollo.getLiteral("cecpac").toString();
+					up.addCecpac(cecpac);
+				}
+
+				last_cod_up = cod_up;
+			}
+		}
+		return uffici_protocollo;
+	}
+
+	private List<UnitaOrganizzativa> searchUnitaOrganizzativeForComune(String cod_com, String comune) {
+		List<UnitaOrganizzativa> unita_organizzative = new ArrayList<UnitaOrganizzativa>();
+		// Cerco le UnitaOrganizzative del Comune
+		String queryString = "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> " + "prefix digitPA: <http://spcdata.digitpa.gov.it/> "
+				+ "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> " + "prefix geonames: <http://www.geonames.org/ontology#> "
+				+ "prefix foaf: <http://xmlns.com/foaf/0.1/> "
+				+ "select ?cod_uo ?unita_organizzativa ?cod_amm ?amministrazione ?sito_web ?telefono ?indirizzo ?pec ?email ?cecpac " + "where{ "
+				+ "	?cod_uo rdf:type digitPA:UnitaOrganizzativa . " + "	?cod_uo geonames:locatedIn <" + cod_com + "> . "
+				+ "	?cod_uo rdfs:label ?unita_organizzativa . " + "	?cod_uo	 digitPA:afferisce ?cod_amm . " + "	?cod_amm rdf:type digitPA:Amministrazione . "
+				+ "	?cod_amm rdfs:label ?amministrazione . " + "	OPTIONAL { ?cod_uo foaf:homepage ?sito_web } . "
+				+ "	OPTIONAL { ?cod_uo digitPA:indirizzo ?indirizzo } . " + "	OPTIONAL { ?cod_uo digitPA:PEC ?pec } .  "
+				+ "	OPTIONAL { ?cod_uo foaf:mbox ?email } . " + "	OPTIONAL { ?cod_uo digitPA:CEC-PAC ?cecpac } . "
+				+ "	OPTIONAL { ?cod_uo foaf:phone ?telefono  } . " + "} " + "ORDER BY ?cod_uo";
+
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(Impostazioni.endpoint, query);
+
+		ResultSet resultsUnitaOrganizzative = qexec.execSelect();
+		String cod_uo, unita_organizzativa, last_cod_uo = null;
+		UnitaOrganizzativa uo = null;
+		for (; resultsUnitaOrganizzative.hasNext();) {
+			QuerySolution solutionUnitaOrganizzativa = resultsUnitaOrganizzative.nextSolution();
+
+			if (solutionUnitaOrganizzativa.getResource("cod_uo") != null && solutionUnitaOrganizzativa.getLiteral("unita_organizzativa") != null) {
+				String sito_web = null, indirizzo = null, pec = null, email = null, cecpac = null, telefono = null;
+				String cod_amm = solutionUnitaOrganizzativa.getResource("cod_amm").toString();
+				String amministrazione = solutionUnitaOrganizzativa.getLiteral("amministrazione").toString();
+				unita_organizzativa = solutionUnitaOrganizzativa.getLiteral("unita_organizzativa").toString();
+				cod_uo = solutionUnitaOrganizzativa.getResource("cod_uo").toString();
+
+				if (last_cod_uo != cod_uo) {
+					uo = new UnitaOrganizzativa(cod_uo, unita_organizzativa);
+					uo.setComune(comune);
+					uo.setCodiceAmministrazione(cod_amm);
+					uo.setLabelAmministrazione(amministrazione);
+					unita_organizzative.add(uo);
+
+					if (solutionUnitaOrganizzativa.getLiteral("indirizzo") != null) {
+						indirizzo = solutionUnitaOrganizzativa.getLiteral("indirizzo").toString();
+						uo.setIndirizzo(indirizzo);
+					}
+
+					if (solutionUnitaOrganizzativa.getLiteral("sito_web") != null) {
+						sito_web = solutionUnitaOrganizzativa.getLiteral("sito_web").toString();
+						uo.setHomepage(sito_web);
+					}
+
+					if (solutionUnitaOrganizzativa.getLiteral("telefono") != null) {
+						telefono = solutionUnitaOrganizzativa.getLiteral("telefono").toString();
+						uo.setTelefono(telefono);
+					}
+
+					for (Servizio s : searchServiziForUnitaOrganizzativa(cod_uo)) {
+						uo.addServizio(s);
+					}
+				}
+				// Queste informazioni possono risultare duplicate nel ResultSet
+				// ma il controllo lo faccio dentro il model
+				if (solutionUnitaOrganizzativa.getLiteral("pec") != null) {
+					pec = solutionUnitaOrganizzativa.getLiteral("pec").toString();
+					uo.addPec(pec);
+				}
+
+				if (solutionUnitaOrganizzativa.getLiteral("email") != null) {
+					email = solutionUnitaOrganizzativa.getLiteral("email").toString();
+					uo.addEmail(email);
+				}
+
+				if (solutionUnitaOrganizzativa.getLiteral("cecpac") != null) {
+					pec = solutionUnitaOrganizzativa.getLiteral("cecpac").toString();
+					uo.addCecpac(cecpac);
+				}
+				last_cod_uo = cod_uo;
+			}
+		}
+		return unita_organizzative;
+	}
+
+	private List<Servizio> searchServiziForUnitaOrganizzativa(String codUo) {
+		return new ArrayList<Servizio>();
+	}
+
+	private List<Servizio> searchServiziForUfficioProtocollo(String codUp) {
+		return new ArrayList<Servizio>();
+	}
+
+	private List<Servizio> searchServiziForAmministrazione(String cod_amm) {
+		return new ArrayList<Servizio>();
+	}
+
+	private List<UnitaOrganizzativa> searchUnitaOrganizzativeForAmministrazione(String cod_amm, String amministrazione) {
+		List<UnitaOrganizzativa> unita_organizzative = new ArrayList<UnitaOrganizzativa>();
+		// Cerco le UnitaOrganizzative del Comune
+		String queryString = "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> " + "prefix digitPA: <http://spcdata.digitpa.gov.it/> "
+				+ "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> " + "prefix geonames: <http://www.geonames.org/ontology#> "
+				+ "prefix foaf: <http://xmlns.com/foaf/0.1/> "
+				+ "select ?cod_uo ?unita_organizzativa ?comune ?sito_web ?telefono ?indirizzo ?pec ?email ?cecpac " + "where{ "
+				+ "	?cod_uo rdf:type digitPA:UnitaOrganizzativa . " + "	?cod_uo rdfs:label ?unita_organizzativa . " + "	?cod_uo	 digitPA:afferisce ?cod_amm . "
+				+ "	?cod_uo geonames:locatedIn ?cod_com . " + "	?cod_com rdfs:label ?comune . " + "	?cod_uo	 digitPA:afferisce <" + cod_amm + "> . " + "	<"
+				+ cod_amm + "> rdf:type digitPA:Amministrazione . " + "	OPTIONAL { ?cod_uo foaf:homepage ?sito_web } . "
+				+ "	OPTIONAL { ?cod_uo digitPA:indirizzo ?indirizzo } . " + "	OPTIONAL { ?cod_uo digitPA:PEC ?pec } .  "
+				+ "	OPTIONAL { ?cod_uo foaf:mbox ?email } . " + "	OPTIONAL { ?cod_uo digitPA:CEC-PAC ?cecpac } . "
+				+ "	OPTIONAL { ?cod_uo foaf:phone ?telefono  } . " + "} " + "ORDER BY ?cod_uo";
+
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(Impostazioni.endpoint, query);
+
+		ResultSet resultsUnitaOrganizzative = qexec.execSelect();
+		String cod_uo, unita_organizzativa, last_cod_uo = null;
+		UnitaOrganizzativa uo = null;
+		for (; resultsUnitaOrganizzative.hasNext();) {
+			QuerySolution solutionUnitaOrganizzativa = resultsUnitaOrganizzative.nextSolution();
+
+			if (solutionUnitaOrganizzativa.getResource("cod_uo") != null && solutionUnitaOrganizzativa.getLiteral("unita_organizzativa") != null) {
+				String comune = null, sito_web = null, indirizzo = null, pec = null, email = null, cecpac = null, telefono = null;
+				unita_organizzativa = solutionUnitaOrganizzativa.getLiteral("unita_organizzativa").toString();
+				cod_uo = solutionUnitaOrganizzativa.getResource("cod_uo").toString();
+				comune = solutionUnitaOrganizzativa.getLiteral("comune").toString();
+
+				if (last_cod_uo != cod_uo) {
+					uo = new UnitaOrganizzativa(cod_uo, unita_organizzativa);
+					uo.setComune(comune);
+					uo.setCodiceAmministrazione(cod_amm);
+					uo.setLabelAmministrazione(amministrazione);
+					unita_organizzative.add(uo);
+
+					if (solutionUnitaOrganizzativa.getLiteral("indirizzo") != null) {
+						indirizzo = solutionUnitaOrganizzativa.getLiteral("indirizzo").toString();
+						uo.setIndirizzo(indirizzo);
+					}
+
+					if (solutionUnitaOrganizzativa.getLiteral("sito_web") != null) {
+						sito_web = solutionUnitaOrganizzativa.getLiteral("sito_web").toString();
+						uo.setHomepage(sito_web);
+					}
+
+					if (solutionUnitaOrganizzativa.getLiteral("telefono") != null) {
+						telefono = solutionUnitaOrganizzativa.getLiteral("telefono").toString();
+						uo.setTelefono(telefono);
+					}
+
+					for (Servizio s : searchServiziForUnitaOrganizzativa(cod_uo)) {
+						uo.addServizio(s);
+					}
+				}
+				// Queste informazioni possono risultare duplicate nel ResultSet
+				// ma il controllo lo faccio dentro il model
+				if (solutionUnitaOrganizzativa.getLiteral("pec") != null) {
+					pec = solutionUnitaOrganizzativa.getLiteral("pec").toString();
+					uo.addPec(pec);
+				}
+
+				if (solutionUnitaOrganizzativa.getLiteral("email") != null) {
+					email = solutionUnitaOrganizzativa.getLiteral("email").toString();
+					uo.addEmail(email);
+				}
+
+				if (solutionUnitaOrganizzativa.getLiteral("cecpac") != null) {
+					pec = solutionUnitaOrganizzativa.getLiteral("cecpac").toString();
+					uo.addCecpac(cecpac);
+				}
+				last_cod_uo = cod_uo;
+			}
+		}
+		return unita_organizzative;
+	}
+
+	private List<UfficioProtocollo> searchUfficiProtocolloForAmministrazione(String cod_amm, String amministrazione) {
+		List<UfficioProtocollo> uffici_protocollo = new ArrayList<UfficioProtocollo>();
+		Query query = null;
+		QueryExecution qexec = null;
+
+		// Cerco gli UfficiProtocollo dell'Amministrazione
+		String queryString = "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> " + "prefix digitPA: <http://spcdata.digitpa.gov.it/> "
+				+ "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> " + "prefix geonames: <http://www.geonames.org/ontology#> "
+				+ "prefix foaf: <http://xmlns.com/foaf/0.1/> "
+				+ "select ?cod_up ?ufficio_protocollo ?indirizzo ?comune ?sito_web ?telefono ?pec ?email ?cecpac " + "where{ "
+				+ "	?cod_up rdf:type digitPA:UfficioProtocolloAOO . " + "	?cod_up geonames:locatedIn ?cod_com . " + "	?cod_com rdfs:label ?comune . "
+				+ "	?cod_up rdfs:label ?ufficio_protocollo . " + "	?cod_up	 digitPA:afferisce <" + cod_amm + "> . "
+				+ "	OPTIONAL { ?cod_up foaf:homepage ?sito_web } . " + "	OPTIONAL { ?cod_up digitPA:indirizzo ?indirizzo } . "
+				+ "	OPTIONAL { ?cod_up digitPA:PEC ?pec } . " + "	OPTIONAL { ?cod_up foaf:mbox ?email } . "
+				+ "	OPTIONAL { ?cod_up digitPA:CEC-PAC ?cecpac } . " + "	OPTIONAL { ?cod_up foaf:phone ?telefono } . " + "} " + "ORDER BY ?cod_up  ";
+
+		query = QueryFactory.create(queryString);
+		qexec = QueryExecutionFactory.sparqlService(Impostazioni.endpoint, query);
+		ResultSet resultsUfficiProtocollo = qexec.execSelect();
+		String cod_up, ufficio_protocollo, last_cod_up = null;
+		String comune = null, sito_web = null, indirizzo = null, pec = null, email = null, cecpac = null, telefono = null;
+		UfficioProtocollo up = null;
+		for (; resultsUfficiProtocollo.hasNext();) {
+			QuerySolution solutionUfficioProtocollo = resultsUfficiProtocollo.nextSolution();
+			if (solutionUfficioProtocollo.getResource("cod_up") != null && solutionUfficioProtocollo.getLiteral("ufficio_protocollo") != null) {
+
+				ufficio_protocollo = solutionUfficioProtocollo.getLiteral("ufficio_protocollo").toString();
+				cod_up = solutionUfficioProtocollo.getResource("cod_up").toString();
+				comune = solutionUfficioProtocollo.getLiteral("comune").toString();
+
+				if (cod_up != last_cod_up) {
+					up = new UfficioProtocollo(cod_up, ufficio_protocollo);
+
+					up.setComune(comune);
+					up.setCodiceAmministrazione(cod_amm);
+					up.setLabelAmministrazione(amministrazione);
+
+					uffici_protocollo.add(up);
+
+					if (solutionUfficioProtocollo.getLiteral("indirizzo") != null) {
+						indirizzo = solutionUfficioProtocollo.getLiteral("indirizzo").toString();
+						up.setIndirizzo(indirizzo);
+					}
+
+					if (solutionUfficioProtocollo.getLiteral("sito_web") != null) {
+						sito_web = solutionUfficioProtocollo.getLiteral("sito_web").toString();
+						up.setHomepage(sito_web);
+					}
+
+					if (solutionUfficioProtocollo.getLiteral("telefono") != null) {
+						telefono = solutionUfficioProtocollo.getLiteral("telefono").toString();
+						up.setTelefono(telefono);
+					}
+
+					for (Servizio s : searchServiziForUfficioProtocollo(cod_up)) {
+						up.addServizio(s);
+					}
+				}
+
+				// Queste informazioni possono risultare duplicate nel ResultSet
+				// ma il controllo lo faccio dentro il model
+				if (solutionUfficioProtocollo.getLiteral("pec") != null) {
+					pec = solutionUfficioProtocollo.getLiteral("pec").toString();
+					up.addPec(pec);
+				}
+
+				if (solutionUfficioProtocollo.getLiteral("email") != null) {
+					email = solutionUfficioProtocollo.getLiteral("email").toString();
+					up.addEmail(email);
+				}
+
+				if (solutionUfficioProtocollo.getLiteral("cecpac") != null) {
+					pec = solutionUfficioProtocollo.getLiteral("cecpac").toString();
+					up.addCecpac(cecpac);
+				}
+
+				last_cod_up = cod_up;
+			}
+		}
+		return uffici_protocollo;
+	}
+}

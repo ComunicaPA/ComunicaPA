@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/comunicapa/!svn/ver/41/trunk/ComunicaPA/res/anim
+END
+decelerate_quint.xml
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/comunicapa/!svn/ver/10/trunk/ComunicaPA/res/anim/decelerate_quint.xml
+END
+fragment_slide_right_enter.xml
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/comunicapa/!svn/ver/10/trunk/ComunicaPA/res/anim/fragment_slide_right_enter.xml
+END
+fragment_slide_left_exit.xml
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/comunicapa/!svn/ver/10/trunk/ComunicaPA/res/anim/fragment_slide_left_exit.xml
+END
+fragment_slide_left_enter.xml
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/comunicapa/!svn/ver/10/trunk/ComunicaPA/res/anim/fragment_slide_left_enter.xml
+END
+fragment_slide_right_exit.xml
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/comunicapa/!svn/ver/10/trunk/ComunicaPA/res/anim/fragment_slide_right_exit.xml
+END
+fadein.xml
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/comunicapa/!svn/ver/41/trunk/ComunicaPA/res/anim/fadein.xml
+END
+fadeout.xml
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/comunicapa/!svn/ver/41/trunk/ComunicaPA/res/anim/fadeout.xml
+END

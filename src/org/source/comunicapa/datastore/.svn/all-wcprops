@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/comunicapa/!svn/ver/16/trunk/ComunicaPA/src/org/source/comunicapa/datastore
+END
+ComunicaPADatabaseHelper.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/comunicapa/!svn/ver/16/trunk/ComunicaPA/src/org/source/comunicapa/datastore/ComunicaPADatabaseHelper.java
+END
+EmailStore.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/comunicapa/!svn/ver/16/trunk/ComunicaPA/src/org/source/comunicapa/datastore/EmailStore.java
+END
+DbConstants.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/comunicapa/!svn/ver/16/trunk/ComunicaPA/src/org/source/comunicapa/datastore/DbConstants.java
+END

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, ComunicaPAActivity!</string>
+    <string name="app_name">ComunicaPA</string>
+    <string name="rubrica">Rubrica</string>
+    <string name="cartelle">Cartelle</string>
+    <string name="inbox">INBOX</string>
+    <string name="draft">DRAFT</string>
+    <string name="sent">SENT</string>
+
+    <!-- Dashboard fragment -->
+    <string name="dash_search">Cerca \n Amministrazione</string>
+    <string name="dash_email">Casella \nEmail</string>
+    <string name="dash_rubrica">Rubrica</string>
+    <string name="dash_setting">Impostazioni</string>
+    <string name="dash_info">Info</string>
+
+    <!-- Menu Item -->
+    <string name="actionbar_mail">Email</string>
+    <string name="actionbar_setting">Setting</string>
+    <string name="actionbar_search">Search</string>
+
+    <!-- Search fragment -->
+    <string name="find_for">Cerca per</string>
+    <string name="administration">Amministrazione</string>
+    <string name="city">Comune di appartenenza</string>
+    <string name="find">Cerca</string>
+    <string name="find_for_label_administration">Tipo di amministrazione</string>
+    <string name="search_local">Centrale</string>
+    <string name="search_central">Locale</string>
+    <string name="no_result_search">La ricerca non ha prodotto nessun risultato.</string>
+    
+  
+
+    <!-- Setting fragment -->
+    <string name="settings">Impostazioni</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="smtp">Server SMTP</string>
+    <string name="pop3">Server POP3</string>
+    <string name="save">Salva</string>
+    
+    <string name="settings_app">Impostazione Applicazione</string>
+    <string name="setting_pec">Imposta account PEC</string>
+    <string name="setting_email">Imposta account email</string>
+    <string name="setting_email_sender">Seleziona l\'applicazione per l\'invio delle mail</string>
+    <string name="setting_email_sender_app">Applicazioni del device (Gmail,Email, etc.)</string>
+  
+
+    <!-- Email activity -->
+    <string name="email_subject">Oggetto</string>
+    <string name="email_text"> \nTesto email \n</string>
+    <string name="email_button_send">Invia</string>
+    <string name="email_button_draft">Salva in bozze</string>
+    <string name="email_button_cancel">Cancella</string>
+    <string name="email_saving_email">Salvataggio in corso</string>
+    <string name="email_deleting_email">Cancellazione in corso</string>
+    <string name="email_sending_email">Invio in corso</string>
+    <string name="email_saved_draft_ok">Bozza salvata</string>
+    <string name="email_saved_draft_fault">Errore: Bozza non salvata</string>
+    <string name="email_sent_email_ok">Email inviata</string>
+    <string name="email_sent_email_fault">Errore: Email non inviata</string>
+    <string name="email_deleted_email_ok">Email eliminata correttamente</string>
+    <string name="email_deleted_email_fault">Errore: email non eliminata!!</string>
+    <string name="email_loading_text">Caricamento email....Attendere</string>
+    <string name="email_empty_folder">Non ci sono email in questa cartella.</string>
+    <string name="email_sent_reciever_label">Inviata a:</string>
+    <string name="email_button_forward">Inoltra</string>
+
+    <!-- Info fragment -->
+    <string name="info_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam semper rhoncus orci, eu congue lectus posuere at. Nunc ac elit a urna sollicitudin scelerisque. Donec ac augue sed ipsum porttitor feugiat. Curabitur tincidunt rhoncus tortor, ac elementum urna eleifend non. Morbi sit amet vestibulum odio. Vestibulum non ante sit amet orci pellentesque aliquet. Nulla feugiat nisl nec nunc iaculis luctus. Fusce ornare sodales pellentesque. Morbi in facilisis dui. Suspendisse at lacus a lacus tempor faucibus. Aliquam consectetur orci eu nulla interdum et sagittis lacus scelerisque. Suspendisse euismod eleifend convallis.
+
+Nam id nisi massa, non gravida odio. Quisque id scelerisque lacus. Vestibulum aliquam pharetra libero sed ornare. Aliquam erat orci, tincidunt vitae sodales eu, tempus vel nibh. Fusce id odio mauris, a mattis risus. Etiam sit amet facilisis felis. Etiam fermentum gravida pellentesque. Nullam a risus sem, quis elementum dolor. Etiam feugiat facilisis iaculis. Etiam elementum sem vehicula diam posuere laoreet.
+
+Mauris accumsan dolor libero, a rhoncus augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nam viverra, augue a suscipit porta, lorem nisl congue odio, sit amet tristique nulla tortor sed nisl. Aliquam posuere dui sit amet ante interdum luctus. Donec venenatis tellus lorem, in mollis enim. Phasellus aliquet dapibus varius. Phasellus tristique leo nec purus pharetra quis ultricies mauris tincidunt. Curabitur facilisis sodales vestibulum. In hac habitasse platea dictumst. Mauris ligula tortor, ullamcorper nec tristique non, eleifend ac augue. Sed ultricies ornare posuere. Nam ultricies pellentesque sapien, et ullamcorper felis elementum eget. Quisque tellus massa, faucibus et adipiscing eu, dignissim id tellus. Quisque eget metus a metus scelerisque semper. Quisque bibendum luctus magna, at suscipit ipsum porta pharetra.</string>
+	
+    
+    <!-- Search Activity -->
+    <string name="search_running"> Ricerca in corso ...</string>
+    
+   <!-- Comune Fragment -->
+   <string name="amministrazioni_disponibili_comune">Amministrazioni disponibili: </string>
+   <string name="cap">(cap %d)</string>
+   <string name="text_noresult_amministrazione">Non ci sono amministrazioni disponibili</string>
+   
+   
+   <!-- Amministrazione Fragment -->
+   <string name="show_servizi">Mostra i servizi associati</string>
+   <string name="show_ufficio">Mostra gli ufficili protocollo associati</string>
+   <string name="show_unita">Mostra le unità organizzative associate</string>
+   <string name="label_email_list">Lista mail %d </string>
+
+</resources>

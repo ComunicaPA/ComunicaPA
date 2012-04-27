@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+ 
+
+     
+    <string-array name="tab_indicator">
+        <item>Email inviate</item>
+        <item>Bozze</item>
+    </string-array> 
+    
+   
+    
+</resources>

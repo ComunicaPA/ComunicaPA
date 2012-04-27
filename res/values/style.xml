@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+     <style name="Theme.SherlockCustom" parent="@style/Theme.Sherlock.Light">
+    	<!--  <item name="abBackground">@drawable/custom_bg</item>-->
+    	<!-- <item name="abIcon">@drawable/ic_magnifying_glass</item> -->
+    	<item name="abTitle">Custom Style!</item>
+    	<!-- <item name="abTitleTextStyle">@style/CustomTitle</item> -->
+    	<item name="abSubtitle">100% set from the style attributes</item>
+    </style>
+    
+     
+     <style name="radiobox">
+         <item name="android:textColor">@android:color/black</item>
+         <item name="android:textSize">16dip</item>
+         <item name="android:textStyle">bold</item>
+     </style>
+     
+     
+     <style name="text_title">
+         <item name="android:textColor">@android:color/black</item>
+         <item name="android:textSize">20dip</item>
+         <item name="android:textStyle">bold</item>
+     </style>
+     
+
+    
+    
+    <style name="theme_action" parent="@style/Theme.Sherlock.Light">
+    	<item name="abBackground">@drawable/action_bg_tile</item>
+    	
+    	<!-- <item name="abIcon">@drawable/ic_magnifying_glass</item> 
+    	<!<item name="abTitle">Custom Style!</item>
+    	<item name="abTitleTextStyle">@style/CustomTitle</item>
+    	<item name="abSubtitle">100% set from the style attributes</item>-->
+    </style>
+</resources>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_tile"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dip"
+            android:paddingLeft="5dip"
+            android:text="@string/find_for"
+            android:textColor="@android:color/black"
+            android:textSize="20dip"
+            android:textStyle="bold" />
+
+        <RadioGroup
+            android:id="@+id/radio_search_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dip" >
+
+            <RadioButton
+                android:id="@+id/radio_search_bycity"
+                style="@style/radiobox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/city" />
+
+            <RadioButton
+                android:id="@+id/radio_search_byadmin"
+                style="@style/radiobox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/administration" />
+        </RadioGroup>
+
+        <LinearLayout
+            android:id="@+id/layout_type_find_for"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone" >
+            
+            <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:paddingLeft="5dip"
+            android:text="@string/find_for_label_administration"
+            android:textColor="@android:color/black"
+            android:textSize="20dip"
+            android:textStyle="bold" />
+
+            <RadioGroup
+                android:id="@+id/radio_search_amministazione_type"
+               android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dip"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/radio_search_local"
+                    style="@style/radiobox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/search_local" />
+
+                <RadioButton
+                    android:id="@+id/radio_search_central"
+                    style="@style/radiobox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/search_central" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/edit_search_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dip"
+            android:layout_marginRight="3dip"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/subject_shape"
+            android:singleLine="true" />
+
+        <Button
+            android:id="@+id/button_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/button_share_selector"
+            android:text="@string/find" />
+    </LinearLayout>
+
+</ScrollView>

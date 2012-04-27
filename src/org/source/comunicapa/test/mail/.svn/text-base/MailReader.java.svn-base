@@ -1,0 +1,351 @@
+package src.org.source.comunicapa.test.mail;
+
+import java.util.ArrayList;
+import java.util.Properties;
+import java.util.List;
+
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Part;
+import javax.mail.Session;
+import javax.mail.Store;
+import javax.mail.internet.InternetAddress;
+
+
+import model.Impostazioni;
+import model.Email;
+
+public class MailReader {
+
+	public List<Email> readMail_IMAP_SSL1() {
+		Store store = null;
+		//Folder folder = null;
+		//Message message = null;
+		Message[] messages = null;
+		
+
+		Properties props = new Properties();
+
+		props.setProperty("mail.imap.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+		props.setProperty("mail.imap.socketFactory.fallback", "false");
+		props.setProperty("mail.imap.socketFactory.port", Impostazioni.imap_port);
+
+		// note that you can also use the defult imap port (including the
+		// port specified by mail.imap.port) for your SSL port configuration.
+		// however, specifying mail.imap.socketFactory.port means that,
+		// if you decide to use fallback, you can try your SSL connection
+		// on the SSL port, and if it fails, you can fallback to the normal
+		// IMAP port.
+
+		try {
+			
+			Session session = javax.mail.Session.getInstance(props, null);
+			store = session.getStore("imaps");
+			store.connect("imap.gmail.com", Impostazioni.username, Impostazioni.password);
+			
+			//store.connect();
+			Folder inbox = store.getFolder("Inbox");
+			inbox = store.getFolder("Inbox");
+			inbox.open(Folder.READ_ONLY);
+			
+			messages = inbox.getMessages();
+			
+			/*
+			Make the following change to fetch ONLY UNREAD messages:
+			Message messages[] = inbox.getMessages();
+			FlagTerm ft = new FlagTerm(new Flags(Flags.Flag.SEEN), false);
+			Message messages[] = inbox.search(ft);
+			 */
+
+			for(Message message : messages) {
+				System.out.println(message);
+			}
+			// Close connection 
+			inbox.close(false);
+			store.close();
+			
+		} catch (Exception e) {
+			System.out.println("caught exception: " + e);
+			e.printStackTrace();
+			
+		}
+		/*
+		 * Parametri per configurare la mail di LIBERO se utilizzi una
+		 * connessione Infostrada:
+		 * 
+		 * Server Posta in arrivo (POP3) 110 popmail.libero.it Server Posta in
+		 * arrivo (POP3) con SSL 995 popmail.libero.it Server Posta in arrivo
+		 * (IMAP4) 143 imapmail.libero.it Server Posta in arrivo (IMAP4) con SSL
+		 * 993 imapmail.libero.it Server Posta in uscita (SMTP) 25
+		 * smtp.libero.it (selezionando la richiesta di autenticazione) Server
+		 * Posta in uscita (SMTP) con SSL 465 smtp.libero.it (selezionando la
+		 * richiesta di autenticazione)
+		 * 
+		 * 
+		 * Parametri per configurare una mail di ALTRO OPERATORE se utilizzi una
+		 * connessione Infostrada:
+		 * 
+		 * Server Posta in arrivo (POP/IMAP) server del tuo mail provider Server
+		 * Posta in uscita (SMTP) mail.libero.it
+		 * 
+		 * 
+		 * **PROBLEMI DI CONFIGURAZIONE PIU' COMUNI***
+		 * 
+		 * 1. La connessione sicura SSL per il server di posta in uscita non va
+		 * selezionata. La voce da selezionare è la Richiesta di autenticazione
+		 * del server di posta in uscita
+		 * 
+		 * 2. Il Nome Utente deve essere inserito comprensivo di dominio: se in
+		 * qualsiasi impostazioni trovare mario.rossi anzichè
+		 * mario.rossi@libero.it completate l'indirizzo inserendo il dominio
+		 * 
+		 * @libero.it, @iol.it, @inwind.it, @blu.it
+		 * 
+		 * 3. Chi sta configurando una mail non di Libero (es. @tuodominio.com,
+		 * 
+		 * @virgilio.it) deve continuare ad utilizzare mail.libero.it senza
+		 * autenticazione oppure deve utilizzare l'smtp indicato dall'email
+		 * provider (es.Gmail, Yahoo ).
+		 * 
+		 * 4. Chi non si connette da Infostrada deve continuare ad utilizzare il
+		 * server di posta in uscita della connessione utilizzata
+		 * 
+		 * 5. Chi ha una Mail Plus può utilizzare smtp.libero.it con richiesta
+		 * di autenticazione
+		 */
+		return null;
+	}
+	
+	public List<Email> readMail_IMAP(){return null;}
+	
+	public List<Email> readInbox_IMAPS() {
+		List<Email> emails = new ArrayList<Email>();
+		Store store = null;
+		Message message = null;
+		Message[] messages = null;
+		Object messagecontentObject = null;
+		Multipart multipart = null;
+		Part part = null;
+		String contentType = null;
+		
+		String sender = null;
+		String subject = null;
+		
+		Properties props = new Properties();
+
+		props.setProperty("mail.imap.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+		props.setProperty("mail.imap.socketFactory.fallback", "false");
+		props.setProperty("mail.imap.socketFactory.port", Impostazioni.imap_port);
+	 
+		try {
+			
+			Session session = javax.mail.Session.getInstance(props, null);
+			store = session.getStore("imap");
+			store.connect(Impostazioni.imap_server, Impostazioni.username, Impostazioni.password);
+			
+			//store.connect();
+		
+			Folder folder = store.getFolder("INBOX");
+			
+			folder.open(Folder.READ_ONLY);
+	
+			messages = folder.getMessages();
+			for (int messageNumber = messages.length -1; messageNumber > messages.length - 10; messageNumber--) {
+				Email email = new Email();
+				message = messages[messageNumber];
+				messagecontentObject = message.getContent();
+	           if (messagecontentObject instanceof Multipart) {
+	               
+	               sender = ((InternetAddress) message.getFrom()[0]).getPersonal();
+	 
+			       if (sender == null) {
+				 	   sender = ((InternetAddress) message.getFrom()[0]).getAddress();
+			       }
+			       email.setAddressFrom(sender);
+			       email.setSubject(message.getSubject());
+	 
+	               multipart = (Multipart) message.getContent();
+	               for (int i = 0; i < multipart.getCount(); i++) {
+	                    part = multipart.getBodyPart(i);
+
+	                    email.setContentType(part.getContentType());
+	                    //TODO: vedere che fare con gli allegati, ad ogni modo va sempre nell'else anche senza allegati
+	                    /*
+	                    if (email.getContentType().startsWith("text/plain")) {
+	                    	//System.out.println("---------reading content type text/plain  mail -------------");
+	                    } 
+	                    else {
+							// Retrieve the file name
+							String fileName = part.getFileName();
+							System.out.println("retrive the fileName="+ fileName);
+	                    }
+	                    */
+	               }
+			   } 
+	           else //No attachments
+	           {
+				   sender = ((InternetAddress) message.getFrom()[0]).getPersonal();
+		 
+				   if (sender == null) {
+					   sender = ((InternetAddress) message.getFrom()[0]).getAddress();
+					   System.out.println("sender in NULL. Printing Address:" + sender);
+				   }
+				   email.setAddressFrom(sender);
+			       email.setSubject(message.getSubject());
+			       email.setContentType(part.getContentType());
+			   }
+	           emails.add(email);
+			}
+			// Close connection 
+			folder.close(false);
+			store.close();
+		}
+		catch (Exception e) 
+		{
+			System.out.println("caught exception: " + e);
+			e.printStackTrace();
+			
+		}
+		return emails;
+	}
+	
+	
+	public List<Email> readSent_IMAPS(){
+		List<Email> emails = new ArrayList<Email>();
+		Store store = null;
+		Message message = null;
+		Message[] messages = null;
+		Object messagecontentObject = null;
+		Multipart multipart = null;
+		Part part = null;
+		String contentType = null;
+		
+		String sender = null;
+		String subject = null;
+		
+		Properties props = new Properties();
+
+		props.setProperty("mail.imap.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+		props.setProperty("mail.imap.socketFactory.fallback", "false");
+		props.setProperty("mail.imap.socketFactory.port", Impostazioni.imap_port);
+	 
+		try {
+			
+			Session session = javax.mail.Session.getInstance(props, null);
+			store = session.getStore("imap");
+			store.connect(Impostazioni.imap_server, Impostazioni.username, Impostazioni.password);
+			
+			//store.connect();
+			Folder[] f = store.getDefaultFolder().list();
+		    for(Folder fd:f)
+		        System.out.println(">> "+fd.getName());
+		
+			Folder folder = store.getFolder("[Gmail]/Sent Mail");
+			
+			folder.open(Folder.READ_ONLY);
+	
+			messages = folder.getMessages();
+			for (int messageNumber = messages.length -1; messageNumber > messages.length - 10; messageNumber--) {
+				Email email = new Email();
+				message = messages[messageNumber];
+				messagecontentObject = message.getContent();
+	           if (messagecontentObject instanceof Multipart) {
+	               
+	               sender = ((InternetAddress) message.getFrom()[0]).getPersonal();
+	 
+			       if (sender == null) {
+				 	   sender = ((InternetAddress) message.getFrom()[0]).getAddress();
+			       }
+			       email.setAddressFrom(sender);
+			       email.setSubject(message.getSubject());
+	 
+	               multipart = (Multipart) message.getContent();
+	               for (int i = 0; i < multipart.getCount(); i++) {
+	                    part = multipart.getBodyPart(i);
+
+	                    email.setContentType(part.getContentType());
+	                    //TODO: vedere che fare con gli allegati, ad ogni modo va sempre nell'else anche senza allegati
+	                    /*
+	                    if (email.getContentType().startsWith("text/plain")) {
+	                    	//System.out.println("---------reading content type text/plain  mail -------------");
+	                    } 
+	                    else {
+							// Retrieve the file name
+							String fileName = part.getFileName();
+							System.out.println("retrive the fileName="+ fileName);
+	                    }
+	                    */
+	               }
+			   } 
+	           else //No attachments
+	           {
+				   sender = ((InternetAddress) message.getFrom()[0]).getPersonal();
+		 
+				   if (sender == null) {
+					   sender = ((InternetAddress) message.getFrom()[0]).getAddress();
+					   System.out.println("sender in NULL. Printing Address:" + sender);
+				   }
+				   email.setAddressFrom(sender);
+			       email.setSubject(message.getSubject());
+			       email.setContentType(part.getContentType());
+			   }
+	           emails.add(email);
+			}
+			// Close connection 
+			folder.close(false);
+			store.close();
+		}
+		catch (Exception e) 
+		{
+			System.out.println("caught exception: " + e);
+			e.printStackTrace();
+			
+		}
+		return emails;	
+	}
+	//deprecated
+	public List<Email> readMail_POP3_SSL() throws Exception{
+        
+        Properties props = new Properties();
+         
+        props.setProperty("mail.pop3.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.setProperty("mail.pop3.socketFactory.fallback", "false");
+        props.setProperty("mail.pop3.port",  Impostazioni.pop3_port);
+        props.setProperty("mail.pop3.socketFactory.port", Impostazioni.pop3_port);
+        props.put("mail.pop3.host", Impostazioni.pop3_server);
+         
+        //URLName url = new URLName("pop3", "pop.gmail.com", 995, "", username, password);
+        try {
+	        Session session = Session.getInstance(props, null);
+	        Store store = session.getStore("pop3"); //pop3s
+	        store.connect(Impostazioni.pop3_server, Impostazioni.username, Impostazioni.password);
+	        
+	        //Folder folder = store.getDefaultFolder();
+	        //Folder = folder.getFolder(folderName);
+	        Folder folder = store.getFolder("INBOX");
+	        
+	         
+	        if (folder == null) {
+	            throw new Exception("Invalid folder");
+	        }
+         
+            folder.open(Folder.READ_ONLY);
+            
+            Message messages[] = folder.getMessages();
+             
+            for (int i=0, n=messages.length; i<n; i++) {
+            	  System.out.println(i + ": " 
+            	    + messages[i].getFrom()[0] + "\t" + messages[i].getSubject());
+            	}
+            folder.close(false);
+            store.close();
+             
+        } catch (MessagingException ex) {
+             
+             
+        }
+        return null;
+	}
+}

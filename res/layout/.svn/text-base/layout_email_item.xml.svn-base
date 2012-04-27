@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="@android:color/white"
+
+   >
+	<LinearLayout 
+	   android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" 
+            android:layout_weight="0.5"
+            android:gravity="center">
+<CheckBox
+        android:id="@+id/checkbox_email_selected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="" 
+        android:focusable="false"
+        android:focusableInTouchMode="false"/> 
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.3"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+        
+        <TextView 
+            android:id="@+id/text_email_emailaddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="email_address"
+            android:textSize="15dip"
+            android:textStyle="bold"
+          
+            android:focusable="false"
+            />
+        <TextView
+            android:id="@+id/text_email_emailsubject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="email subject"
+            android:textSize="12dip"
+            
+            android:focusable="false"/>
+    </LinearLayout>
+	<LinearLayout 
+	   android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" 
+            android:layout_weight="0.5"
+            android:gravity="center"
+            >
+    <TextView 
+            android:id="@+id/text_email_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="date"
+
+            android:focusable="false"
+            />
+    <TextView 
+            android:id="@+id/text_email_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="time"
+    
+
+            android:focusable="false"
+            />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,428 @@
+package org.source.comunicapa.datastore;
+
+import java.util.ArrayList;
+
+import org.source.comunicapa.model.Email;
+import org.source.comunicapa.utils.Utils;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
+
+public class EmailStore {
+
+	private ComunicaPADatabaseHelper dbHelper;
+
+	private static final int FALSE_DB_VALUE = 0;
+	private static final int TRUE_DB_VALUE = 1;
+
+	public EmailStore(Context context) {
+
+		dbHelper = new ComunicaPADatabaseHelper(context);
+
+	}
+
+	public boolean deleteItem(int id) {
+
+		boolean isValueDeleted;
+		SQLiteDatabase db = null;
+
+		String whereClause = " " + DbConstants.ID_COLUMN + " = ? ";
+		String[] whereArgs = new String[] { "" + id + "" };
+		Utils.log(" ID DEleted " + id);
+		try {
+			db = dbHelper.getWritableDatabase();
+
+			db.beginTransaction();
+			int row = db.delete(DbConstants.EMAIL_TABLE, whereClause, whereArgs);
+			Utils.log(" ROW DEleted " + row);
+			db.setTransactionSuccessful();
+			db.endTransaction();
+			isValueDeleted = true;
+		} catch (Exception e) {
+
+			isValueDeleted = false;
+
+		} finally {
+			if (db != null) {
+
+				db.close();
+			}
+		}
+
+		return isValueDeleted;
+
+	}
+
+	public boolean saveDraft(Email email) {
+
+		boolean isValueInserted;
+		SQLiteDatabase db = null;
+
+		ContentValues values = new ContentValues();
+
+		values.put(DbConstants.DATE_COLUMN, email.getTime());
+		values.put(DbConstants.EMAIL_COLUMN, email.getAddress());
+		values.put(DbConstants.SUBJECT_COLUMN, email.getSubject());
+		values.put(DbConstants.ISSENT_COLUMN, FALSE_DB_VALUE);
+
+		try {
+			db = dbHelper.getWritableDatabase();
+
+			db.beginTransaction();
+			db.insert(DbConstants.EMAIL_TABLE, null, values);
+			db.setTransactionSuccessful();
+
+			isValueInserted = true;
+		} catch (Exception e) {
+
+			isValueInserted = false;
+
+		} finally {
+			if (db != null) {
+				db.endTransaction();
+				db.close();
+			}
+		}
+
+		return isValueInserted;
+	}
+
+	public boolean saveEmail(Email email) {
+
+		boolean isValueInserted;
+		SQLiteDatabase db = null;
+		ContentValues values = new ContentValues();
+
+		values.put(DbConstants.EMAIL_COLUMN, email.getAddress());
+		values.put(DbConstants.DATE_COLUMN, email.getTime());
+		values.put(DbConstants.SUBJECT_COLUMN, email.getSubject());
+		values.put(DbConstants.BODY_COLUMN, email.getBody());
+		values.put(DbConstants.ISSENT_COLUMN, TRUE_DB_VALUE);
+
+		try {
+			db = dbHelper.getWritableDatabase();
+
+			db.beginTransaction();
+			db.insert(DbConstants.EMAIL_TABLE, null, values);
+			db.setTransactionSuccessful();
+			db.endTransaction();
+			isValueInserted = true;
+		} catch (Exception e) {
+
+			isValueInserted = false;
+
+		} finally {
+			if (db != null) {
+
+				db.close();
+			}
+		}
+
+		return isValueInserted;
+	}
+
+	/**
+	 * 
+	 * Allows to delete draft email
+	 * 
+	 * @param email
+	 *            , draft to delete
+	 * @return true if draft is removed, false otherwise
+	 */
+	public boolean deleteDraft(Email email) {
+		boolean isValueDeleted;
+		SQLiteDatabase db = null;
+
+		String whereClause = " " + DbConstants.DATE_COLUMN + " = ? AND " + DbConstants.EMAIL_COLUMN + " = ? AND " + DbConstants.ISSENT_COLUMN + " = ?";
+		String[] whereArgs = new String[] { "%" + email.getTime() + "%", "%" + email.getAddress() + "%", "%" + FALSE_DB_VALUE + "%" };
+		try {
+			db = dbHelper.getWritableDatabase();
+
+			db.beginTransaction();
+			db.delete(DbConstants.EMAIL_TABLE, whereClause, whereArgs);
+
+			db.setTransactionSuccessful();
+			db.endTransaction();
+			isValueDeleted = true;
+		} catch (Exception e) {
+
+			isValueDeleted = false;
+
+		} finally {
+			if (db != null) {
+
+				db.close();
+			}
+		}
+
+		return isValueDeleted;
+
+	}
+
+	/**
+	 * 
+	 * Allows to delete sent email
+	 * 
+	 * @param email
+	 *            , email to delete
+	 * @return true if email is removed, false otherwise
+	 */
+
+	public boolean deleteEmail(Email email) {
+		boolean isValueDeleted;
+		SQLiteDatabase db = null;
+
+		// String whereClause = " " + DbConstants.DATE_COLUMN + " = ? AND " +
+		// DbConstants.EMAIL_COLUMN + " = ? AND " + DbConstants.ISSENT_COLUMN +
+		// " = ?";
+		// String[] whereArgs = new String[] { "%" + email.getTime() + "%", "%"
+		// + email.getAddress() + "%", "%" + TRUE_DB_VALUE + "%" };
+
+		String whereClause = DbConstants.ID_COLUMN + " = ? ";
+		String[] whereArgs = new String[] { "" + email.getId() + "" };
+
+		Utils.log("ID email " + email.getId());
+
+		try {
+			db = dbHelper.getWritableDatabase();
+
+			db.beginTransaction();
+			int i = db.delete(DbConstants.EMAIL_TABLE, whereClause, whereArgs);
+
+			db.setTransactionSuccessful();
+			db.endTransaction();
+			isValueDeleted = true;
+			Utils.log("Email removed " + i);
+		} catch (Exception e) {
+
+			isValueDeleted = false;
+
+		} finally {
+			if (db != null) {
+
+				db.close();
+			}
+		}
+
+		return isValueDeleted;
+
+	}
+
+	/**
+	 * Allows to change the state of email from draft to sent email.
+	 * 
+	 * @param email
+	 *            , draft to update to email
+	 * 
+	 * @return true, if draft is updated to email
+	 */
+
+	public boolean updateDraftToEmail(Email email) {
+
+		boolean isValueUpdated = false;
+		SQLiteDatabase db = null;
+
+		ContentValues values = new ContentValues();
+
+		values.put(DbConstants.EMAIL_COLUMN, email.getAddress());
+		values.put(DbConstants.DATE_COLUMN, email.getTime());
+		values.put(DbConstants.SUBJECT_COLUMN, email.getSubject());
+		values.put(DbConstants.BODY_COLUMN, email.getBody());
+		values.put(DbConstants.ISSENT_COLUMN, TRUE_DB_VALUE);
+
+		String whereClause = " " + DbConstants.DATE_COLUMN + " = ? AND " + DbConstants.EMAIL_COLUMN + " = ? AND " + DbConstants.ISSENT_COLUMN + " = ?";
+		String[] whereArgs = new String[] { "%" + email.getTime() + "%", "%" + email.getAddress() + "%", "%" + FALSE_DB_VALUE + "%" };
+		try {
+			db = dbHelper.getWritableDatabase();
+
+			db.beginTransaction();
+			int updateRow = db.update(DbConstants.EMAIL_TABLE, values, whereClause, whereArgs);
+
+			db.setTransactionSuccessful();
+			db.endTransaction();
+			if (updateRow > 0)
+				isValueUpdated = true;
+		} catch (Exception e) {
+
+			isValueUpdated = false;
+
+		} finally {
+			if (db != null) {
+
+				db.close();
+			}
+		}
+
+		return isValueUpdated;
+	}
+
+	/**
+	 * Getting saved Draft email.
+	 * 
+	 * @return emails, list of draft emails.
+	 */
+	public ArrayList<Email> getDraft() {
+
+		ArrayList<Email> emails = new ArrayList<Email>();
+		Cursor c = null;
+
+		// String whereClause = " " + DbConstants.ISSENT_COLUMN + " = ?";
+		// String[] whereArgs = new String[] { "%" + 0 + "%" };
+		//
+		// String orderBy = DbConstants.DATE_COLUMN + " DESC";
+
+		SQLiteDatabase db = null;
+
+		// query = new SQLiteQueryBuilder();
+		// query.setTables(DbConstants.EMAIL_TABLE);
+
+		String queryString = SQLiteQueryBuilder.buildQueryString(false, DbConstants.EMAIL_TABLE, null, DbConstants.ISSENT_COLUMN + " = " + FALSE_DB_VALUE,
+				null, null, DbConstants.DATE_COLUMN + " DESC", null);
+		// query.buildQuery(null, DbConstants.ISSENT_COLUMN + " = " + false,
+		// null, null, DbConstants.DATE_COLUMN + " DESC", null);
+		Utils.log(queryString);
+
+		try {
+			db = dbHelper.getReadableDatabase();
+			// c = db.query(DbConstants.EMAIL_TABLE, null, whereClause,
+			// whereArgs, null, null, orderBy);
+
+			c = db.rawQuery(queryString, null);
+			c.moveToFirst();
+
+			while (!c.isAfterLast()) {
+
+				Email e = new Email();
+				e.setId(c.getInt(0));
+				e.setTime(c.getLong(1));
+				e.setAddress(c.getString(2));
+				e.setSubject(c.getString(3));
+				e.setBody(c.getString(4));
+
+				emails.add(e);
+
+				c.moveToNext();
+
+			}
+
+		} finally {
+
+			if (c != null) {
+				c.close();
+			}
+			if (db != null) {
+				db.close();
+			}
+		}
+
+		return emails;
+
+	}
+
+	/**
+	 * Getting saved sent Email.
+	 * 
+	 * @return emails, list of draft emails.
+	 */
+
+	public ArrayList<Email> getEmail() {
+
+		ArrayList<Email> emails = new ArrayList<Email>();
+		Cursor c = null;
+
+		// String whereClause = " " + DbConstants.ISSENT_COLUMN + " = ?";
+		// String[] whereArgs = new String[] { "%" + true + "%" };
+		//
+		// String orderBy = DbConstants.DATE_COLUMN + " DESC";
+
+		SQLiteDatabase db = null;
+
+		String queryString = SQLiteQueryBuilder.buildQueryString(false, DbConstants.EMAIL_TABLE, null, DbConstants.ISSENT_COLUMN + " = " + TRUE_DB_VALUE, null,
+				null, DbConstants.DATE_COLUMN + " DESC", null);
+
+		try {
+			db = dbHelper.getReadableDatabase();
+			c = db.rawQuery(queryString, null);
+			c.moveToFirst();
+
+			while (!c.isAfterLast()) {
+
+				Email e = new Email();
+				e.setId(c.getInt(0));
+				e.setTime(c.getLong(1));
+				e.setAddress(c.getString(2));
+				e.setSubject(c.getString(3));
+				e.setBody(c.getString(4));
+
+				emails.add(e);
+
+				c.moveToNext();
+
+			}
+
+		} finally {
+
+			if (c != null) {
+				c.close();
+			}
+			if (db != null) {
+				db.close();
+			}
+		}
+
+		return emails;
+
+	}
+
+	/**
+	 * Update draft email
+	 * 
+	 * @param email
+	 *            , draft email to be updated
+	 * @return true if draft is updated, false otherwise
+	 */
+
+	public boolean updateDraft(Email email) {
+
+		boolean isValueUpdate = false;
+		SQLiteDatabase db = null;
+
+		ContentValues values = new ContentValues();
+
+		values.put(DbConstants.EMAIL_COLUMN, email.getAddress());
+		values.put(DbConstants.DATE_COLUMN, email.getTime());
+		values.put(DbConstants.SUBJECT_COLUMN, email.getSubject());
+		values.put(DbConstants.BODY_COLUMN, email.getBody());
+		values.put(DbConstants.ISSENT_COLUMN, FALSE_DB_VALUE);
+
+		String whereClause = " " + DbConstants.ID_COLUMN + " = ? ";
+
+		String[] whereArgs = new String[] { "%" + email.getId() + "%" };
+		try {
+			db = dbHelper.getWritableDatabase();
+
+			db.beginTransaction();
+			int updateRow = db.update(DbConstants.EMAIL_TABLE, values, whereClause, whereArgs);
+
+			db.setTransactionSuccessful();
+			db.endTransaction();
+			if (updateRow > 0)
+				isValueUpdate = true;
+		} catch (Exception e) {
+
+			isValueUpdate = false;
+
+		} finally {
+			if (db != null) {
+
+				db.close();
+			}
+		}
+
+		return isValueUpdate;
+
+	}
+}

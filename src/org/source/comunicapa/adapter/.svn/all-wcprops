@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/comunicapa/!svn/ver/45/trunk/ComunicaPA/src/org/source/comunicapa/adapter
+END
+DashboardAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/comunicapa/!svn/ver/6/trunk/ComunicaPA/src/org/source/comunicapa/adapter/DashboardAdapter.java
+END
+AmministrazioneAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/comunicapa/!svn/ver/36/trunk/ComunicaPA/src/org/source/comunicapa/adapter/AmministrazioneAdapter.java
+END
+EmailExpandAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/comunicapa/!svn/ver/45/trunk/ComunicaPA/src/org/source/comunicapa/adapter/EmailExpandAdapter.java
+END
+EmailAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/comunicapa/!svn/ver/36/trunk/ComunicaPA/src/org/source/comunicapa/adapter/EmailAdapter.java
+END
+ListComuniAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/comunicapa/!svn/ver/36/trunk/ComunicaPA/src/org/source/comunicapa/adapter/ListComuniAdapter.java
+END
+TabsAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/comunicapa/!svn/ver/11/trunk/ComunicaPA/src/org/source/comunicapa/adapter/TabsAdapter.java
+END

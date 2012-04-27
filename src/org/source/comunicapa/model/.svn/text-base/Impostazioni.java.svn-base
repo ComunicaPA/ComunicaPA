@@ -1,0 +1,82 @@
+package org.source.comunicapa.model;
+
+public final class Impostazioni {
+
+	// XXX Real
+	public static final String endpoint = "http://spcdata.digitpa.gov.it:8899/sparql";
+	// XX FAKE virtuoso
+	// public static final String endpoint = "http://localhost:8890/DAV";
+
+	/* Impostazioni condivise */
+	public static final String contentType = "text/plain";
+	public static final String timeout = "100000";
+	/* ********************** */
+
+	/*
+	 * Impostazioni NON SSL public static final String indirizzo_mittente =
+	 * "franco.maccioni@digitpa.it"; public static final String nome =
+	 * "Franco Maccioni"; public static final String username =
+	 * "antonio.maccioni@digitpa.it"; ; public static final String password =
+	 * "****"; public static final String smtp_server = "smtp.cnipa.it"; public
+	 * static final String portaSend = "26";
+	 * 
+	 * 
+	 * public static final String imap_server ="imap.gmail.com"; public static
+	 * final String imap_port = "993"; //IMAP/SSL public static final String
+	 * pop3_port ="995"; public static final String pop3_server
+	 * ="pop.gmail.com"; /* **********************
+	 */
+
+	/* Impostazioni SSL */
+	public static final String indirizzo_mittente = "antonio.maccioni@gmail.com";
+	public static final String nome = "Franco Maccioni";
+	public static final String username = "antonio.maccioni@gmail.com";
+	public static final String password = "****";
+	public static final String smtp_server = "smtp.gmail.com";
+	public static final String portaSend = "465";
+
+	public static final String imap_port = "993"; // IMAP/SSL
+	public static final String imap_server = "imap.gmail.com";
+	public static final String pop3_port = "995";
+	public static final String pop3_server = "pop.gmail.com";
+
+	/* ********************** */
+
+	/*
+	 * Impostazioni Mail di pocketPEC
+	 * 
+	 * Vista casella: questo parametro definisce la visualizzazione di default
+	 * all'apertura di una casella PEC; i valori possibili sono: Elenco
+	 * cartelle, Cartella di default Nome: Nome e cognome dell'utente Indirizzo
+	 * PEC: Indirizzo di posta elettronica associato alla casella PEC Password
+	 * posta in arrivo: password di accesso al server della posta in arrivo
+	 * Server posta in arrivo: nome del server della posta in arrivo Username
+	 * posta in arrivo: username per l'accesso al server della posta in arrivo
+	 * Tipo di server posta in arrivo: tipo di server della posta in arrivo;i
+	 * possibili valori sono IMAP e POP3 Porta posta in arrivo: porta per la
+	 * comunicazione con il server della posta in arrivo Connessione sicura al
+	 * server posta in arrivo: per utilizzare una connessione protetta (SSL)
+	 * verso il server della posta in arrivo Usa TLS: per utilizzare il
+	 * protocollo TLS per rendere sicura la comunicazione con il server Chiudi
+	 * sessione: per chiudere la sessione di comunicazione con il server una
+	 * volta effettuata la sincronizzazione Rispondi a: indirizzo di posta
+	 * elettronica di risposta Invia copia in CCN: in caso di server POP3,
+	 * attivare questa opzione per ricevere una copia dei messaggi inviati dal
+	 * palmare in Copia Conoscenza Nascosta Indirizzo di posta CCN: in caso di
+	 * server POP3, indirizzo di posta elettronica a cui inviare copia dei
+	 * messaggi inviati da palmare Server della posta in uscita: nome del server
+	 * della posta in uscita Porta posta in uscita: porta per la comunicazione
+	 * con il server della posta in uscita Connessione sicura al server della
+	 * posta in uscita: per utilizzare una connessione protetta (SSL) verso il
+	 * server della posta in uscita Username per posta in uscita: username per
+	 * l'accesso al server della posta in uscita Password per posta in uscita:
+	 * password per l'accesso al server della posta in uscita Tipo di
+	 * autenticazione: tipologia di autenticazione utilizzata dal server della
+	 * posta in uscita;possibili valori sono: Plain, Login, Cram_MD5 Dominio
+	 * posta in uscita: dominio del server della posta in uscita Usa STARTTLS:
+	 * utilizza STARTTLS per iniziare la connessione sicura verso il server
+	 * della posta in uscita Firma: firma dei messaggi di posta elettronica
+	 * inviati dal palmare
+	 */
+
+}
